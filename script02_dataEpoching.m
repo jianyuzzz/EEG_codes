@@ -15,7 +15,6 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Great brombeere jam!
 clear all
 
 inpath = strcat(pwd,'/data_pp/');
