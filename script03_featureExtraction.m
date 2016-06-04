@@ -14,6 +14,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%
 clear all
 
 inpath = strcat(pwd,'/data_epo/');% horizontal string concentenation
@@ -22,10 +23,9 @@ outpath = strcat(pwd,'/data_feat/');% owd shows the current working directory
 % List of filenames of all subjects
 % subjects = {'S01','S02','S03','S04','S05','S06','S07','S08','S09','S10'};
 subjects = {'S01'};
-%s= 1;
-
+%%
 for s=1:length(subjects)
-    
+    %%
     filename = subjects{s};% e.g. 'S01'
     %filename = strcat(subjects{s},'.mat');
     load(strcat(inpath,filename))
@@ -83,14 +83,20 @@ for s=1:length(subjects)
        FEAT.conn2(:,:,trial) = cov(FEAT.temp(:,:,trial)')-(trace(cov(FEAT.temp(:,:,trial)')))/28;
         %FEAT.conn2(:,:,trial) = cov(FEAT.temp(:,:,trial)');
     end    
+    
+    % plot the differences between 
+    figure;
     subplot(2,2,1)
     imagesc(mean(FEAT.conn2(:,:,FEAT.labels==1),3)-mean(FEAT.conn2(:,:,FEAT.labels==0),3))
-    cbar
+    title('Execution error minus no error')
+    cbar%mean of the 3rd dim, i.e. mean of covariance relationship between channels across different trials
     subplot(2,2,2)
     imagesc(mean(FEAT.conn2(:,:,FEAT.labels==2),3)-mean(FEAT.conn2(:,:,FEAT.labels==0),3))
+    title('Output error minus no error')
     cbar
     subplot(2,2,3)
     imagesc(mean(FEAT.conn2(:,:,FEAT.labels==2),3)-mean(FEAT.conn2(:,:,FEAT.labels==1),3))
+    title('Output error minus execution error')
     cbar
 
     save(strcat(outpath,filename),'FEAT')

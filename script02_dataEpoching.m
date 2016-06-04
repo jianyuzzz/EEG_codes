@@ -94,7 +94,8 @@ for s = 1:length(subjects)
     plot(EPO.times,mean(EPO.out(8,:,:),3),'r')
     
     eeglab2loreta(EPO.chanlocs, mean(EPO.exec(:,:,:), 3), 'exporterp', 'on');
-
+   
+    
 save(strcat(outpath,out_filename),'EPO')
 
 end
