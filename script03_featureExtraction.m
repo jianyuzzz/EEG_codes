@@ -9,6 +9,7 @@
 % Output:   struct file containing different feature types and labels
 %
 % Author: Stefan Ehrlich
+% Modificated by Jianyu Zhao
 % Last revised: 23.02.2016
 %
 %
@@ -61,9 +62,10 @@ for s=1:length(subjects)
         fprintf(strcat(num2str(ch),'\n'))
     end
     FEAT.freq = permute(pxx(1:40,:,:),[2 1 3]);% rearrange the dimensions of A to 2-by-1-by-3
-    FEAT.f = FEAT.f(1:40);% only reserve the main 40 frequencies
+    FEAT.f = FEAT.f(1:40);% only preserve the main 40 frequencies
     clear pxx
     
+    figure;
     figure(s) % frequency-domain features of the 8th channel
     plot(FEAT.f,mean(FEAT.freq(8,:,FEAT.labels==0),3))
     hold on
@@ -100,7 +102,7 @@ for s=1:length(subjects)
     cbar
 
     save(strcat(outpath,filename),'FEAT')
-    clear FEAT
+    %clear FEAT
     
 end
     

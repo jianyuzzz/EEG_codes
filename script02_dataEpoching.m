@@ -44,7 +44,7 @@ for s = 1:length(subjects)
     [EEG_epo] = pop_epoch(EEG,{'2'},[0 1])% (EEG, events, timelimits)
     EPO.out = EEG_epo.data;% epoched execution error and outcome error data
     
-    % recover latencies (????)
+    % recover latencies 
     % record all the moments when errors happend
     execErr = [];
     outErr = [];
@@ -87,13 +87,14 @@ for s = 1:length(subjects)
         end
     end
 
+    figure;
     figure(s)% 3 lines of means of no error, execution error and outcome error epochs
     plot(EPO.times,mean(EPO.noError(8,:,:),3))
     hold on
     plot(EPO.times,mean(EPO.exec(8,:,:),3),'g')
     plot(EPO.times,mean(EPO.out(8,:,:),3),'r')
     
-    eeglab2loreta(EPO.chanlocs, mean(EPO.exec(:,:,:), 3), 'exporterp', 'on');
+    %eeglab2loreta(EPO.chanlocs, mean(EPO.exec(:,:,:), 3), 'exporterp', 'on');
    
     
 save(strcat(outpath,out_filename),'EPO')
