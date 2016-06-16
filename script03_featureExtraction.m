@@ -74,13 +74,13 @@ for s=1:length(subjects)
     
     
     %% Extraction of connectivity features
-%{
+
     for trial = 1:size(FEAT.temp,3)% correlation
         FEAT.conn(:,:,trial) = corr(FEAT.temp(:,EPO.times>0.2 & EPO.times<0.9,trial)');
     end
-%}    
+    
 
-
+%{
     for trial = 1:size(FEAT.temp,3) % covariance
        FEAT.conn2(:,:,trial) = cov(FEAT.temp(:,:,trial)')-(trace(cov(FEAT.temp(:,:,trial)')))/28;
         %FEAT.conn2(:,:,trial) = cov(FEAT.temp(:,:,trial)');
@@ -100,7 +100,7 @@ for s=1:length(subjects)
     imagesc(mean(FEAT.conn2(:,:,FEAT.labels==2),3)-mean(FEAT.conn2(:,:,FEAT.labels==1),3))
     title('Output error minus execution error')
     cbar
-
+%}
     save(strcat(outpath,filename),'FEAT')
     %clear FEAT
     

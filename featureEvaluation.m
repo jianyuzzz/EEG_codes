@@ -28,8 +28,8 @@ cov2 = mean(FEAT.conn2(:,:,FEAT.labels==2),3); % output error
 cov0 = mean(FEAT.conn2(:,:,FEAT.labels==0),3); % no error
 %}
 
-cov1 = FEAT.conn2(:,:,FEAT.labels==1);
-cov0 = FEAT.conn2(:,:,FEAT.labels==0);
+cov1 = FEAT.conn(:,:,FEAT.labels==2);
+cov0 = FEAT.conn(:,:,FEAT.labels==0);
 
 n_ch = size(FEAT.temp,1);
 [d dp df dfp] = deal(zeros(n_ch,n_ch));
@@ -43,25 +43,32 @@ for i=1:n_ch
 end
 
 %% Choose the best N features with the highest df
-[sortedDf,idx] = sort(dfp(:),'descend');
+[sortedDf,idx] = sort(df(:),'descend');
 maxDfs = sortedDf(1:N);
 maxIdx = idx(1:N);
 [I,J] = ind2sub(size(df),maxIdx);
+
+plot(sortedDf);
+
+%gscatter(squeeze(FEAT.conn(I(1),J(1),:)),squeeze(FEAT.conn(I(2),J(2),:)),FEAT.labels)
+
 
 %% Draw the topoplots
 % for execution errors
 displayStr.chanPairs = [I J];
 mcov1 = mean(cov1,3);
+mcov0 = mean(cov0,3);
 strth = [];
 for i=1:size(I)
     for j=1:size(J)
-        strth = [strth;mcov1(I(i),J(j))];
+        strth = [strth;mcov1(I(i),J(j))-mcov0(I(i),J(j))];
     end
 end
 displayStr.connectStrength = strth;
 topoplot_connect(displayStr, FEAT.chanlocs);
 clear strth;
 % for no-error situation
+%{
 mcov0 = mean(cov0,3);
 strth = [];
 for i=1:size(I)
@@ -72,3 +79,4 @@ end
 displayStr.connectStrength = strth;
 figure;
 topoplot_connect(displayStr, FEAT.chanlocs);
+%}
