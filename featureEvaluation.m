@@ -16,12 +16,13 @@
 clear all;
 
 inpath = strcat(pwd,'/data_feat/');
+outpath = strcat(pwd,'/data_parametric/');
 filename = 'S01';
 load(strcat(inpath,filename));
-N = 10;
+N = 20;
 
-cov1 = FEAT.conn(:,:,FEAT.labels==1);
-cov0 = FEAT.conn(:,:,FEAT.labels==0);
+cov1 = FEAT.conn(:,:,FEAT.labels==2);
+cov0 = FEAT.conn(:,:,FEAT.labels==1);
 
 n_ch = size(FEAT.temp,1);
 [d dp df dfp] = deal(zeros(n_ch,n_ch));
@@ -40,6 +41,12 @@ maxDfs = sortedDf(1:N);
 maxIdx = idx(1:N);
 [I,J] = ind2sub(size(df),maxIdx);
 
+%%
+[sortedD,idxn] = sort(d(:),'descend');
+[sortedDp,idxn] = sort(dp(:),'descend');
+[sortedDfp,idxn] = sort(dfp(:),'descend');
+save(strcat(outpath,'out-exe'),'sortedD','sortedDp','sortedDf','sortedDfp');
+
 %plot(sortedDf);
 
 %gscatter(squeeze(FEAT.conn(I(1),J(1),:)),squeeze(FEAT.conn(I(2),J(2),:)),FEAT.labels)
@@ -57,7 +64,8 @@ for i=1:size(I)
     end
 end
 displayStr.connectStrength = strth;
-topoplot_connect(displayStr, FEAT.chanlocs);
+displayStr.connectStrengthLimits = [-0.1840 0.2205];
+%topoplot_connect(displayStr, FEAT.chanlocs);
 clear strth;
 %{
 xp = min(strth);

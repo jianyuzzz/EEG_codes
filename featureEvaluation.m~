@@ -16,12 +16,13 @@
 clear all;
 
 inpath = strcat(pwd,'/data_feat/');
+outpath = strcat(pwd,'/data_parametric/');
 filename = 'S01';
 load(strcat(inpath,filename));
-N = 10;
+N = 20;
 
 cov1 = FEAT.conn(:,:,FEAT.labels==1);
-cov0 = FEAT.conn(:,:,FEAT.labels==2);
+cov0 = FEAT.conn(:,:,FEAT.labels==0);
 
 n_ch = size(FEAT.temp,1);
 [d dp df dfp] = deal(zeros(n_ch,n_ch));
@@ -39,6 +40,7 @@ end
 maxDfs = sortedDf(1:N);
 maxIdx = idx(1:N);
 [I,J] = ind2sub(size(df),maxIdx);
+save(strcat(outpath,filename),'d','dp','df','dfp');
 
 %plot(sortedDf);
 
@@ -57,8 +59,9 @@ for i=1:size(I)
     end
 end
 displayStr.connectStrength = strth;
+displayStr.connectStrengthLimits = [-0.1840 0.2205];
 topoplot_connect(displayStr, FEAT.chanlocs);
-%clear strth;
+clear strth;
 %{
 xp = min(strth);
 yp = max(strth);

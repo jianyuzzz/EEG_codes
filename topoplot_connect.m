@@ -184,6 +184,7 @@ end
 
 % praneeth - ends
 set(gcf, 'color', BACKCOLOR);
+
 colorb = colorbar;
 colorb.Label.String = 'Connectivity Difference';
 colorb.Label.FontSize = 11;
@@ -197,7 +198,7 @@ for i=1:11
 end
 colorb.TickLabels = st;
 
-title('Outcome Error - Execution Error (correlation)');
+title('Execution Error - No Error (correlation)');
 %xp, yp
 return;
 
