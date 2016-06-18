@@ -6,7 +6,7 @@
 % 
 % Input:    struct file containing 3 types of epoched data, no error, 
 %           execution error, outcome error (outcome error is the human
-%           error, while execution error is the machine error?)
+%           error, while execution error is the machine error)
 % Output:   struct file containing different feature types and labels
 %
 % Author: Stefan Ehrlich
@@ -103,7 +103,7 @@ for s=1:length(subjects)
     cbar
 %}
     save(strcat(outpath,filename),'FEAT')
-    clear FEAT
+    %clear FEAT
     
 end
     

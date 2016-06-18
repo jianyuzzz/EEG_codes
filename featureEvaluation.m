@@ -4,11 +4,11 @@
 % Data analysis of dataset SPUELER2015
 % Feature evaluation and visualization
 % 
-% Input:    connectivity information (e.g. covariance matrices)
+% Input:    connectivity information (e.g. correlation matrices)
 % Output:   connected topoplots
 
 % Author: Jianyu Zhao
-% Last revised: 16.06.2016
+% Last revised: 18.06.2016
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -20,15 +20,7 @@ filename = 'S01';
 load(strcat(inpath,filename));
 N = 10;
 
-% there's no need to calculate the mean value, 
-% we need the whole distribution
-%{ 
-cov1 = mean(FEAT.conn2(:,:,FEAT.labels==1),3); % mean of cov of exe err
-cov2 = mean(FEAT.conn2(:,:,FEAT.labels==2),3); % output error
-cov0 = mean(FEAT.conn2(:,:,FEAT.labels==0),3); % no error
-%}
-
-cov1 = FEAT.conn(:,:,FEAT.labels==2);
+cov1 = FEAT.conn(:,:,FEAT.labels==1);
 cov0 = FEAT.conn(:,:,FEAT.labels==0);
 
 n_ch = size(FEAT.temp,1);
@@ -48,7 +40,7 @@ maxDfs = sortedDf(1:N);
 maxIdx = idx(1:N);
 [I,J] = ind2sub(size(df),maxIdx);
 
-plot(sortedDf);
+%plot(sortedDf);
 
 %gscatter(squeeze(FEAT.conn(I(1),J(1),:)),squeeze(FEAT.conn(I(2),J(2),:)),FEAT.labels)
 
@@ -67,6 +59,17 @@ end
 displayStr.connectStrength = strth;
 topoplot_connect(displayStr, FEAT.chanlocs);
 clear strth;
+%{
+xp = min(strth);
+yp = max(strth);
+label = xp:(yp-xp)/10:yp;
+label = round((label*100))/100; % round to 2 decimals
+st = cell(1,11);
+for i=1:11
+    st{i} = num2str(label(i));
+end
+%}
+
 % for no-error situation
 %{
 mcov0 = mean(cov0,3);

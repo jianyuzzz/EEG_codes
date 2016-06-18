@@ -196,8 +196,6 @@ for i=1:11
     st{i} = num2str(label(i));
 end
 colorb.TickLabels = st;
-
-title('Outcome Error - Execution Error (correlation)');
 %xp, yp
 return;
 
