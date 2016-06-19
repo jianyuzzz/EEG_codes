@@ -50,6 +50,7 @@ for s=1:length(subjects)
     FEAT.temp = cat(3,EPO.noError,EPO.exec,EPO.out);% simply contatenate the epoched data 
     
     %% Extraction of frequency-domain features
+    %{
     winSize = 128;
     noverlap = 64;
     nfft = 256;% length of fft 
@@ -73,20 +74,21 @@ for s=1:length(subjects)
     plot(FEAT.f,mean(FEAT.freq(8,:,FEAT.labels==1),3),'g')
     plot(FEAT.f,mean(FEAT.freq(8,:,FEAT.labels==2),3),'r')
     
-    
+    %}
     %% Extraction of connectivity features
 
     for trial = 1:size(FEAT.temp,3)% correlation
         FEAT.conn(:,:,trial) = corr(FEAT.temp(:,EPO.times>0.2 & EPO.times<0.9,trial)');
     end
-    
+   
 
-%{
+
     for trial = 1:size(FEAT.temp,3) % covariance
-       FEAT.conn2(:,:,trial) = cov(FEAT.temp(:,:,trial)')-(trace(cov(FEAT.temp(:,:,trial)')))/28;
-        %FEAT.conn2(:,:,trial) = cov(FEAT.temp(:,:,trial)');
-    end    
+       %FEAT.conn2(:,:,trial) = cov(FEAT.temp(:,:,trial)')-(trace(cov(FEAT.temp(:,:,trial)')))/28;
+        FEAT.conn2(:,:,trial) = cov(FEAT.temp(:,:,trial)');
+    end   
     
+ %{   
     % plot the differences between 
     figure;
     subplot(2,2,1)

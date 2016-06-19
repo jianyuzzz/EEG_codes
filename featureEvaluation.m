@@ -13,16 +13,16 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
-clear all;
+clearvars;
 
 inpath = strcat(pwd,'/data_feat/');
 outpath = strcat(pwd,'/data_parametric/');
 filename = 'S01';
 load(strcat(inpath,filename));
-N = 20;
+N = 10;
 
-cov1 = FEAT.conn(:,:,FEAT.labels==2);
-cov0 = FEAT.conn(:,:,FEAT.labels==1);
+cov1 = FEAT.conn2(:,:,FEAT.labels==2);
+cov0 = FEAT.conn2(:,:,FEAT.labels==1);
 
 n_ch = size(FEAT.temp,1);
 [d dp df dfp] = deal(zeros(n_ch,n_ch));
@@ -42,15 +42,16 @@ maxIdx = idx(1:N);
 [I,J] = ind2sub(size(df),maxIdx);
 
 %%
-[sortedD,idxn] = sort(d(:),'descend');
-[sortedDp,idxn] = sort(dp(:),'descend');
-[sortedDfp,idxn] = sort(dfp(:),'descend');
-save(strcat(outpath,'out-exe'),'sortedD','sortedDp','sortedDf','sortedDfp');
+%[sortedD,idxn] = sort(d(:),'descend');
+%[sortedDp,idxn] = sort(dp(:),'descend');
+%[sortedDfp,idxn] = sort(dfp(:),'descend');
+%save(strcat(outpath,'out-exe'),'sortedD','sortedDp','sortedDf','sortedDfp');
 
 %plot(sortedDf);
 
-%gscatter(squeeze(FEAT.conn(I(1),J(1),:)),squeeze(FEAT.conn(I(2),J(2),:)),FEAT.labels)
+gscatter(squeeze(real(log(FEAT.conn2(I(1),J(1),:)))/log(2)),squeeze(real(log(FEAT.conn2(I(2),J(2),:)))/log(2)),FEAT.labels)
 
+%gscatter(squeeze(FEAT.conn2(I(1),J(1),:)),squeeze(FEAT.conn2(I(2),J(2),:)),FEAT.labels)
 
 %% Draw the topoplots
 % for execution errors
