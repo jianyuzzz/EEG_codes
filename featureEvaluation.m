@@ -6,7 +6,7 @@
 % 
 % Input:    connectivity information (e.g. correlation matrices)
 % Output:   connected topoplots
-
+%
 % Author: Jianyu Zhao
 % Last revised: 18.06.2016
 %
@@ -19,10 +19,10 @@ inpath = strcat(pwd,'/data_feat/');
 outpath = strcat(pwd,'/data_parametric/');
 filename = 'S01';
 load(strcat(inpath,filename));
-N = 10;
+N = 20;
 
-cov1 = FEAT.conn2(:,:,FEAT.labels==2);
-cov0 = FEAT.conn2(:,:,FEAT.labels==1);
+cov1 = FEAT.conn2(:,:,FEAT.labels==1);
+cov0 = FEAT.conn2(:,:,FEAT.labels==0);
 
 n_ch = size(FEAT.temp,1);
 [d dp df dfp] = deal(zeros(n_ch,n_ch));
@@ -47,11 +47,12 @@ maxIdx = idx(1:N);
 %[sortedDfp,idxn] = sort(dfp(:),'descend');
 %save(strcat(outpath,'out-exe'),'sortedD','sortedDp','sortedDf','sortedDfp');
 
-%plot(sortedDf);
+plot(sortedDf);
 
-gscatter(squeeze(real(log(FEAT.conn2(I(1),J(1),:)))/log(2)),squeeze(real(log(FEAT.conn2(I(2),J(2),:)))/log(2)),FEAT.labels)
+%gscatter(squeeze(real(log(FEAT.conn2(I(1),J(1),:)))/log(1.01)),squeeze(real(log(FEAT.conn2(I(2),J(2),:)))/log(1.01)),FEAT.labels)
 
-%gscatter(squeeze(FEAT.conn2(I(1),J(1),:)),squeeze(FEAT.conn2(I(2),J(2),:)),FEAT.labels)
+%figure;
+gscatter(squeeze(FEAT.conn2(I(1),J(1),:)),squeeze(FEAT.conn2(I(2),J(2),:)),FEAT.labels)
 
 %% Draw the topoplots
 % for execution errors
@@ -65,8 +66,9 @@ for i=1:size(I)
     end
 end
 displayStr.connectStrength = strth;
-displayStr.connectStrengthLimits = [-0.1840 0.2205];
-%topoplot_connect(displayStr, FEAT.chanlocs);
+%displayStr.connectStrengthLimits = [-0.1840 0.2205];
+figure;
+topoplot_connect(displayStr, FEAT.chanlocs);
 clear strth;
 %{
 xp = min(strth);

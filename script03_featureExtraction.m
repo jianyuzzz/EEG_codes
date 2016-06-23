@@ -84,8 +84,16 @@ for s=1:length(subjects)
 
 
     for trial = 1:size(FEAT.temp,3) % covariance
-       %FEAT.conn2(:,:,trial) = cov(FEAT.temp(:,:,trial)')-(trace(cov(FEAT.temp(:,:,trial)')))/28;
-        FEAT.conn2(:,:,trial) = cov(FEAT.temp(:,:,trial)');
+        %{
+        % normalize
+        FEAT.conn2(:,:,trial) = cov(FEAT.temp(:,:,trial)')-(trace(cov(FEAT.temp(:,:,trial)')))/28;
+        % standarize
+        FEAT.conn2(:,:,trial) = FEAT.conn2(:,:,trial)/std(diag(cov(FEAT.temp(:,:,trial)')));
+        %FEAT.conn2(:,:,trial) = cov(FEAT.temp(:,:,trial)');
+        %}
+        covv = cov(FEAT.temp(:,:,trial)');
+        FEAT.conn2(:,:,trial) = (covv - mean(covv(:)))/std(covv(:));
+
     end   
     
  %{   
