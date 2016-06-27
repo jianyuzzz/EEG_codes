@@ -91,7 +91,8 @@ for s=1:length(subjects)
         FEAT.conn2(:,:,trial) = FEAT.conn2(:,:,trial)/std(diag(cov(FEAT.temp(:,:,trial)')));
         %FEAT.conn2(:,:,trial) = cov(FEAT.temp(:,:,trial)');
         %}
-        covv = cov(FEAT.temp(:,:,trial)');
+        covv = cov(FEAT.temp(:,:,trial)');% for each trial, 28 channels, each with 256 moments
+        % 256*28, columnwise covariances
         FEAT.conn2(:,:,trial) = (covv - mean(covv(:)))/std(covv(:));
 
     end   
@@ -112,9 +113,25 @@ for s=1:length(subjects)
     title('Output error minus execution error')
     cbar
 %}
-    save(strcat(outpath,filename),'FEAT')
-    clear FEAT
     
+    for trial = 1:size(FEAT.temp,3)% coherence
+        FEAT.conn3(:,:,trial) = mscohere(FEAT.temp(:,:,trial)',FEAT.temp(:,:,trial)');
+        % 28*256 -> 256*28, columnwise, still not correct through
+        % size: 129*28, 129 is the size of normalized freq
+        % I can calculate the 28*28 coherence relation, but which freq can
+        % i use to build features?
+    end
+    
+    save(strcat(outpath,filename),'FEAT')
+    %clear FEAT
+    
+    %% Show the temporary waveforms of Fz, Cz and Pz data after exe-error
+%{    
+    figure; plot(mean(EPO.out(4,:,:),3));title('Fz channel after outcome error');
+    figure; plot(mean(EPO.out(12,:,:),3));title('Cz channel after outcome error');
+    figure; plot(mean(EPO.out(20,:,:),3));title('Pz channel after outcome error');
+%}    
+   
 end
     
     

@@ -36,10 +36,12 @@ for i=1:n_ch
 end
 
 %% Choose the best N features with the highest df
-[sortedDf,idx] = sort(df(:),'descend');
+[sortedDf,idx] = sort(dfp(:),'descend');
 maxDfs = sortedDf(1:N);
 maxIdx = idx(1:N);
 [I,J] = ind2sub(size(df),maxIdx);
+
+maxDfs
 
 %%
 %[sortedD,idxn] = sort(d(:),'descend');
@@ -47,12 +49,12 @@ maxIdx = idx(1:N);
 %[sortedDfp,idxn] = sort(dfp(:),'descend');
 %save(strcat(outpath,'out-exe'),'sortedD','sortedDp','sortedDf','sortedDfp');
 
-plot(sortedDf);
+%plot(sortedDf);
 
 %gscatter(squeeze(real(log(FEAT.conn2(I(1),J(1),:)))/log(1.01)),squeeze(real(log(FEAT.conn2(I(2),J(2),:)))/log(1.01)),FEAT.labels)
 
 %figure;
-gscatter(squeeze(FEAT.conn2(I(1),J(1),:)),squeeze(FEAT.conn2(I(2),J(2),:)),FEAT.labels)
+%gscatter(squeeze(FEAT.conn2(I(1),J(1),:)),squeeze(FEAT.conn2(I(2),J(2),:)),FEAT.labels)
 
 %% Draw the topoplots
 % for execution errors
@@ -66,7 +68,7 @@ for i=1:size(I)
     end
 end
 displayStr.connectStrength = strth;
-%displayStr.connectStrengthLimits = [-0.1840 0.2205];
+displayStr.connectStrengthLimits = [-0.3836 0.4784];
 figure;
 topoplot_connect(displayStr, FEAT.chanlocs);
 clear strth;
