@@ -116,7 +116,7 @@ for s=1:length(subjects)
     %%  coherence calculation
     F = zeros(size(FEAT.temp,3),1);
     for trial = 1:size(FEAT.temp,3)% coherence
-        [FEAT.conn3(:,trial),~] = mscohere(FEAT.temp(4,:,trial),...
+        [FEAT.conn3(:,trial),F(trial)] = mscohere(FEAT.temp(4,:,trial),...
                               FEAT.temp(12,:,trial),[],[],256,256)
         % 28*256*trial
     end
@@ -147,8 +147,7 @@ for s=1:length(subjects)
     p1 = mean(FEAT.conn3(:,FEAT.labels==1),2);
     p2 = mean(FEAT.conn3(:,FEAT.labels==2),2);
     p0 = mean(FEAT.conn3(:,FEAT.labels==0),2);
-    %plot([1:len],p1,'r',[1:len],p2,'b',[1:len],p0,'g');
-    plot(F,p1,'r',F,p2,'b',F,p0,'g');
+    plot([1:len],p1,'r',[1:len],p2,'b',[1:len],p0,'g');
     legend('exe','outcome','no');
     %% Show the temporary waveforms of Fz, Cz and Pz data after exe-error
 %{    
@@ -161,10 +160,6 @@ for s=1:length(subjects)
     figure; plot(squeeze(EPO.out(12,:,70)));title('Cz channel after outcome error');
     figure; plot(squeeze(EPO.out(20,:,70)));title('Pz channel after outcome error');
 %}
-    
-    %% Test the function mscohere() here
-    mscohere(FEAT.temp(4,:,trial),...
-                              FEAT.temp(12,:,trial),[],[],256,256)
     
 end
     

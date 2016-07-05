@@ -8,7 +8,7 @@
 % Output:   connected topoplots
 %
 % Author: Jianyu Zhao
-% Last revised: 18.06.2016
+% Last revised: 05.07.2016
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -22,7 +22,7 @@ load(strcat(inpath,filename));
 N = 20;
 
 cov1 = FEAT.conn2(:,:,FEAT.labels==2);
-cov0 = FEAT.conn2(:,:,FEAT.labels==1);
+cov0 = FEAT.conn2(:,:,FEAT.labels==0);
 
 n_ch = size(FEAT.temp,1);
 [d dp df dfp] = deal(zeros(n_ch,n_ch));
@@ -63,6 +63,9 @@ mcov0 = mean(cov0,3);
 
 %for i=1:N
     
+%% Polarity check
+for i=1:N
+    if sign
 
 %% Draw the topoplots
 % for execution errors
@@ -72,11 +75,11 @@ mcov1 = mean(cov1,3);
 mcov0 = mean(cov0,3);
 strth = [];
 for i=1:size(I)
-    strth = [strth;mcov1(I(i),J(i))-mcov0(I(i),J(i))];
-    %strth = [strth;mcov0(I(i),J(j))];
+    %strth = [strth;mcov1(I(i),J(i))-mcov0(I(i),J(i))];
+    strth = [strth;mcov1(I(i),J(i))];
 end
 displayStr.connectStrength = strth;
-displayStr.connectStrengthLimits = [-0.3836 0.2682];
+%displayStr.connectStrengthLimits = [-1.64 2.08];
 figure;
 topoplot_connect(displayStr, FEAT.chanlocs);
 clear strth;
@@ -94,15 +97,13 @@ end
 %}
 
 % for no-error situation
-%{
+
 mcov0 = mean(cov0,3);
 strth = [];
 for i=1:size(I)
-    for j=1:size(J)
-        strth = [strth;mcov0(I(i),J(j))];
-    end
+    strth = [strth;mcov0(I(i),J(i))];
 end
 displayStr.connectStrength = strth;
+%displayStr.connectStrengthLimits = [-1.64 2.08];
 figure;
 topoplot_connect(displayStr, FEAT.chanlocs);
-%}
