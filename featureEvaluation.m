@@ -19,10 +19,10 @@ inpath = strcat(pwd,'/data_feat/');
 outpath = strcat(pwd,'/data_parametric/');
 filename = 'S01';
 load(strcat(inpath,filename));
-N = 20;
+N = 10;
 
-cov1 = FEAT.conn2(:,:,FEAT.labels==1);
-cov0 = FEAT.conn2(:,:,FEAT.labels==0);
+cov1 = FEAT.conn2(:,:,FEAT.labels==2);
+cov0 = FEAT.conn2(:,:,FEAT.labels==1);
 
 n_ch = size(FEAT.temp,1);
 [d dp df dfp] = deal(zeros(n_ch,n_ch));
@@ -36,12 +36,12 @@ for i=1:n_ch
 end
 
 %% Choose the best N features with the highest df
-[sortedDf,idx] = sort(dfp(:),'descend');
+[sortedDf,idx] = sort(df(:),'descend');
 maxDfs = sortedDf(1:N);
 maxIdx = idx(1:N);
 [I,J] = ind2sub(size(df),maxIdx);
 
-maxDfs
+%maxDfs
 
 %%
 %[sortedD,idxn] = sort(d(:),'descend');
@@ -56,22 +56,32 @@ maxDfs
 %figure;
 %gscatter(squeeze(FEAT.conn2(I(1),J(1),:)),squeeze(FEAT.conn2(I(2),J(2),:)),FEAT.labels)
 
+%% Split the connections into poitive and negative ones
+% luckily, all we have are neg-more-neg, pos-more-pos conns
+mcov1 = mean(cov1,3);
+mcov0 = mean(cov0,3);
+
+%for i=1:N
+    
+
 %% Draw the topoplots
 % for execution errors
+
 displayStr.chanPairs = [I J];
 mcov1 = mean(cov1,3);
 mcov0 = mean(cov0,3);
 strth = [];
 for i=1:size(I)
-    for j=1:size(J)
-        strth = [strth;mcov1(I(i),J(j))-mcov0(I(i),J(j))];
-    end
+    strth = [strth;mcov1(I(i),J(i))-mcov0(I(i),J(i))];
+    %strth = [strth;mcov0(I(i),J(j))];
 end
 displayStr.connectStrength = strth;
-displayStr.connectStrengthLimits = [-0.3836 0.4784];
+displayStr.connectStrengthLimits = [-0.3836 0.2682];
 figure;
 topoplot_connect(displayStr, FEAT.chanlocs);
 clear strth;
+
+
 %{
 xp = min(strth);
 yp = max(strth);

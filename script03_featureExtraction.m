@@ -113,14 +113,16 @@ for s=1:length(subjects)
     title('Output error minus execution error')
     cbar
 %}
-    
+    %%  coherence calculation
     for trial = 1:size(FEAT.temp,3)% coherence
-        FEAT.conn3(:,:,trial) = mscohere(FEAT.temp(:,:,trial)',FEAT.temp(:,:,trial)');
-        % 28*256 -> 256*28, columnwise, still not correct through
+        FEAT.conn3(:,trial) = mscohere(FEAT.temp(:,4,trial)',FEAT.temp(:,12,trial)');
+        % 28*256 -> 256*28, columnwise, still not correct though
         % size: 129*28, 129 is the size of normalized freq
         % I can calculate the 28*28 coherence relation, but which freq can
         % i use to build features?
     end
+    
+    
     
     save(strcat(outpath,filename),'FEAT')
     %clear FEAT
@@ -131,7 +133,14 @@ for s=1:length(subjects)
     figure; plot(mean(EPO.out(12,:,:),3));title('Cz channel after outcome error');
     figure; plot(mean(EPO.out(20,:,:),3));title('Pz channel after outcome error');
 %}    
-   
+    figure; plot(squeeze(EPO.out(4,:,70)));title('Fz channel after outcome error');
+    figure; plot(squeeze(EPO.out(12,:,70)));title('Cz channel after outcome error');
+    figure; plot(squeeze(EPO.out(20,:,70)));title('Pz channel after outcome error');
+
+    
+    %% coherence plot
+    show =  FEAT.conn3(:,1802);
+    plot(show);
 end
     
     

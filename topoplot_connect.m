@@ -198,7 +198,7 @@ for i=1:11
 end
 colorb.TickLabels = st;
 
-title('Outcome Error - Excution Error (covariance)');
-%xp, yp
+title('Outcome Error - Execution Error (covariance)');
+xp, yp
 return;
 
