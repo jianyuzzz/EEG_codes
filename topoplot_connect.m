@@ -186,7 +186,7 @@ end
 set(gcf, 'color', BACKCOLOR);
 
 colorb = colorbar;
-colorb.Label.String = 'Connectivity Difference';
+%colorb.Label.String = 'Connectivity Measure';
 colorb.Label.FontSize = 11;
 %colorb.Limits = [xp yp];
 
@@ -198,7 +198,7 @@ for i=1:11
 end
 colorb.TickLabels = st;
 
-title('Outcome Error - Execution Error (covariance)');
+%title(' Fisher score (outcome error - execution error)');
 xp, yp
 return;
 

@@ -86,13 +86,22 @@ for s = 1:length(subjects)
             c = c+1;
         end
     end
-
+%%
     figure;
     figure(s)% 3 lines of means of no error, execution error and outcome error epochs
-    plot(EPO.times,mean(EPO.noError(8,:,:),3))
-    hold on
-    plot(EPO.times,mean(EPO.exec(8,:,:),3),'g')
-    plot(EPO.times,mean(EPO.out(8,:,:),3),'r')
+    %plot(EPO.times,mean(EPO.noError(8,:,:),3))
+    %hold on
+    %plot(EPO.times,mean(EPO.exec(8,:,:),3),'g')
+    %plot(EPO.times,mean(EPO.out(8,:,:),3),'r')
+    plot(EPO.times,mean(EPO.out(8,:,:),3),'r',EPO.times,...
+        mean(EPO.noError(8,:,:),3),'b',EPO.times,mean(EPO.exec(8,:,:),3),...
+        'g','LineWidth',0.75);
+    legend('outcome error','no error','execution error');
+    
+    xlabel('Time(s)');
+    ylabel('Amplitude(\muV)');
+    title('Epoched Data');
+
     
     %eeglab2loreta(EPO.chanlocs, mean(EPO.exec(:,:,:), 3), 'exporterp', 'on');
    

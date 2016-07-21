@@ -5,13 +5,12 @@
 % Feature extraction
 % 
 % Input:    struct file containing 3 types of epoched data, no error, 
-%           execution error, outcome error (outcome error is the human
-%           error, while execution error is the machine error?)
+%           execution error, outcome error 
 % Output:   struct file containing different feature types and labels
 %
 % Author: Stefan Ehrlich
 % Modificated by Jianyu Zhao
-% Last revised: 05.07.2016
+% Last revised: 18.07.2016
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -114,58 +113,89 @@ for s=1:length(subjects)
     cbar
 %}
     %%  coherence calculation
-    F = zeros(size(FEAT.temp,3),1);
+    chn = [4,12,20,11,13];
+    cohere = cell(5,5);
+    %cohere = zeros(257,size(FEAT.temp,3));
+    
     for trial = 1:size(FEAT.temp,3)% coherence
-        [FEAT.conn3(:,trial),~] = mscohere(FEAT.temp(4,:,trial),...
-                              FEAT.temp(12,:,trial),[],[],256,256)
-        % 28*256*trial
+        for i=1:4
+            for j=i+1:5
+                [cohere{i,j}(:,trial),F] = mscohere(FEAT.temp(chn(i),:,trial)',...
+                                      FEAT.temp(chn(j),:,trial)',[],[],128,256);
+                % 28*256*trial
+            end
+        end
+    end
+    
+    %% extract feature from alpha waves
+    FEAT.conn3 = zeros(28,28,size(FEAT.temp,3));
+    %conn3_tmp = zeros(28,28);
+    for trial = 1:size(FEAT.temp,3)  
+        for i=1:4
+            for j=i+1:5                     
+                FEAT.conn3(chn(i),chn(j),trial) = single(mean(cohere{i,j}(50:60,trial),1));
+            end
+        end
+        %FEAT.conn3(:,:,trial) = (conn3_tmp - mean(conn3_tmp(:)))/std(conn3_tmp(:));
     end
     
     save(strcat(outpath,filename),'FEAT')
     %clear FEAT
  
-    % coherence plot
+    %% coherence plot
     % select 70 of all the samples randomly
-    %{
-    figure;
-    show1 =  FEAT.conn3(:,FEAT.labels==1);
-    sz = size(show1,2);
-    show1 = show1(:,randperm(sz,70));
-    s1 = mean(show1,2);
-    s2 = mean(FEAT.conn3(:,FEAT.labels==2),2);
-    show0 =  FEAT.conn3(:,FEAT.labels==0);
-    sz = size(show0,2);
-    show0 = show0(:,randperm(sz,70));
-    s0 = mean(show0,2);
-    plot([1:len],s1,'r',[1:len],s2,'b',[1:len],s0,'g');
-    legend('exe','outcome','no');
-    %}
-    
-    % different number of samples
-    figure;
-    len = length(p1);
-    p1 = mean(FEAT.conn3(:,FEAT.labels==1),2);
-    p2 = mean(FEAT.conn3(:,FEAT.labels==2),2);
-    p0 = mean(FEAT.conn3(:,FEAT.labels==0),2);
-    %plot([1:len],p1,'r',[1:len],p2,'b',[1:len],p0,'g');
-    plot(F,p1,'r',F,p2,'b',F,p0,'g');
-    legend('exe','outcome','no');
+    i = 1;
+    j = 2;
+    if 1
+        figure;
+        show1 =  cohere{i,j}(:,FEAT.labels==1);
+        sz = size(show1,2);
+        show1 = show1(:,randperm(sz,70));
+        s1 = mean(show1,2);
+        s2 = mean(cohere{i,j}(:,FEAT.labels==2),2);
+        show0 =  cohere{i,j}(:,FEAT.labels==0);
+        sz = size(show0,2);
+        show0 = show0(:,randperm(sz,70));
+        s0 = mean(show0,2);
+        plot(F,s1,'r',F,s2,'b',F,s0,'g','LineWidth',0.75);
+        legend('exe','outcome','no');
+        xlabel('Frequency(Hz)');
+        ylabel('Magnitude');
+        title('Coherence (mean of same number of randomly selected samples)');
+
+        % different number of samples
+        figure;
+        p1 = mean(cohere{i,j}(:,FEAT.labels==1),2);
+        p2 = mean(cohere{i,j}(:,FEAT.labels==2),2);
+        p0 = mean(cohere{i,j}(:,FEAT.labels==0),2);
+        plot(F,p1,'r',F,p2,'b',F,p0,'g','LineWidth',0.75);
+        legend('exe','outcome','no');
+        xlabel('Frequency(Hz)');
+        ylabel('Magnitude');
+        title('Coherence (mean of all the samples)');
+    end
     %% Show the temporary waveforms of Fz, Cz and Pz data after exe-error
-%{    
-    figure; plot(mean(EPO.out(4,:,:),3));title('Fz channel after outcome error');
-    figure; plot(mean(EPO.out(12,:,:),3));title('Cz channel after outcome error');
-    figure; plot(mean(EPO.out(20,:,:),3));title('Pz channel after outcome error');
-%}    
-%{
-    figure; plot(squeeze(EPO.out(4,:,70)));title('Fz channel after outcome error');
-    figure; plot(squeeze(EPO.out(12,:,70)));title('Cz channel after outcome error');
-    figure; plot(squeeze(EPO.out(20,:,70)));title('Pz channel after outcome error');
-%}
+    if 0
+        figure; plot(mean(EPO.out(4,:,:),3));title('Fz channel after outcome error');
+        figure; plot(mean(EPO.out(12,:,:),3));title('Cz channel after outcome error');
+        figure; plot(mean(EPO.out(20,:,:),3));title('Pz channel after outcome error');
+
+        figure; plot(squeeze(EPO.out(4,:,70)));title('Fz channel after outcome error');
+        figure; plot(squeeze(EPO.out(12,:,70)));title('Cz channel after outcome error');
+        figure; plot(squeeze(EPO.out(20,:,70)));title('Pz channel after outcome error');
+    end
     
     %% Test the function mscohere() here
-    mscohere(FEAT.temp(4,:,trial),...
-                              FEAT.temp(12,:,trial),[],[],256,256)
-    
+    if 0
+        trial = 222;
+        [Cxy,F] = mscohere(FEAT.temp(4,:,trial)',...
+                                  FEAT.temp(12,:,trial)',[],[],512,256);
+        figure;
+        plot(F,Cxy);
+        xlabel('Frequency(Hz)');
+        ylabel('Magnitude');
+        title('MS COHERENCE');
+    end
 end
     
     
